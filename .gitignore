@@ -1,0 +1,16 @@
+
+# ignore the following files
+
+# vscode files and folders
+.vscode
+./orca/.vscode
+./orca/src/.vscode
+./orca/src/RVO.vcpro
+
+
+# from orca package
+./orca/src/understanding_modelStates.cpp
+
+
+
+
