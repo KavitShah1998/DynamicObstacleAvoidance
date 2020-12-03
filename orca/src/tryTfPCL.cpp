@@ -34,11 +34,13 @@ void cb(const sensor_msgs::LaserScanConstPtr & ptr){
 
     size_t size = ptr->ranges.size();
 
+    double d_angle = ptr->angle_increment;
+
     try{
-        g_list->waitForTransform("/map", "/base_scan", 
+        g_list->waitForTransform("/map", "/hokuyo", 
         ros::Time(0), ros::Duration(10.0));
         
-        g_list->lookupTransform("/map", "/base_scan",
+        g_list->lookupTransform("/map", "/hokuyo",
         ros::Time(0), g_stmp_transform);
     }
     catch (tf::TransformException &ex) {
@@ -53,11 +55,12 @@ void cb(const sensor_msgs::LaserScanConstPtr & ptr){
     
     for(int i=0;i<size; i++){
         if(!isinf(ptr->ranges[i])){
-            double x = (ptr->ranges[i]) * cos(i*M_PI/180.0f);
-            double y = (ptr->ranges[i]) * sin(i*M_PI/180.0f);           
+            double angle = i * d_angle;
+            double x = (ptr->ranges[i]) * cos(angle);
+            double y = (ptr->ranges[i]) * sin(angle);           
 
             RVO::Vector2 point = transformPoint(mat, origin, tf::Vector3(x,y,0));
-            std::cout << i << " " <<   point << "\n";
+            std::cout << i << " " <<   point << "   angle= " << angle << "\n";
         }
 
     }  

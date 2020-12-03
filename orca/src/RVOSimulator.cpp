@@ -58,6 +58,9 @@ namespace RVO {
 		defaultAgent_->timeHorizon_ = timeHorizon;
 		defaultAgent_->timeHorizonObst_ = timeHorizonObst;
 		defaultAgent_->velocity_ = velocity;
+
+		// std::cout << "size of obstacle " << obstacles_.size() << "\n";
+
 	}
 
 	RVOSimulator::~RVOSimulator()
@@ -129,11 +132,11 @@ namespace RVO {
 		if (vertices.size() < 2) {
 			return RVO_ERROR;
 		}
-
+		// std::cout << "From sim: received size = " << vertices.size() << "\n";
 		const size_t obstacleNo = obstacles_.size();
-
 		for (size_t i = 0; i < vertices.size(); ++i) {
 			Obstacle *obstacle = new Obstacle();
+
 			obstacle->point_ = vertices[i];
 
 			if (i != 0) {
@@ -154,12 +157,13 @@ namespace RVO {
 			else {
 				obstacle->isConvex_ = (leftOf(vertices[(i == 0 ? vertices.size() - 1 : i - 1)], vertices[i], vertices[(i == vertices.size() - 1 ? 0 : i + 1)]) >= 0.0f);
 			}
-
 			obstacle->id_ = obstacles_.size();
+
 
 			obstacles_.push_back(obstacle);
 		}
 
+		// std::cout << "From sim: Obst size = " << obstacles_.size() << "\n";
 		return obstacleNo;
 	}
 
@@ -305,6 +309,7 @@ namespace RVO {
 
 	void RVOSimulator::processObstacles()
 	{
+		// std::cout << " Frpm process Obstacles: " << obstacles_.size() << "\n";
 		kdTree_->buildObstacleTree();
 	}
 
@@ -380,7 +385,7 @@ namespace RVO {
 	}
 
 	void RVOSimulator::clearObstacleVector(){
-		std::cout << "Size of Obstacle Vector : " << obstacles_.size() << "\n";
+		// std::cout << "Size of Obstacle Vector : " << obstacles_.size() << "\n";
 		for (size_t i = 0; i < obstacles_.size(); ++i) {
 			if(!obstacles_[i]){
 				delete obstacles_[i];

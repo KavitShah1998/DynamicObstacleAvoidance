@@ -1,7 +1,9 @@
+<!-- -->
+
 <launch>
   <!-- Arguments -->
   <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
-  <arg name="map_file" default="$(find env)/maps/simple_obs1.yaml"/>
+  <arg name="map_file" default="$(find env)/maps/turtlebot3_open_spaces-edit.yaml"/>
   <arg name="open_rviz" default="true"/>
   <arg name="move_forward_only" default="false"/>
   <arg name="initial_pose_x" default="0.0"/>

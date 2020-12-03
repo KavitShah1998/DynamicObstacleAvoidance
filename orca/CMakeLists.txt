@@ -119,7 +119,7 @@ find_package( OpenCV REQUIRED )
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-#  CATKIN_DEPENDS geometry_msgs move_base_msgs nav_msgs orca_msgs roscpp rospy sensor_msgs std_msgs tf
+  CATKIN_DEPENDS geometry_msgs move_base_msgs nav_msgs orca_msgs roscpp rospy sensor_msgs std_msgs tf
 #  DEPENDS system_lib
 )
 
@@ -248,6 +248,9 @@ set_target_properties(test_sim PROPERTIES LINKER_LANGUAGE C)
 
 add_executable(tfPCL src/tryTfPCL.cpp)
 target_link_libraries(tfPCL ${catkin_LIBRARIES})
+
+add_executable(temp src/temp.cpp)
+target_link_libraries(temp ${catkin_LIBRARIES})
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

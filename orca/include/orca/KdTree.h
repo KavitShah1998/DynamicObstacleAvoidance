@@ -137,8 +137,7 @@ namespace RVO {
 		 */
 		void buildObstacleTree();
 
-		ObstacleTreeNode *buildObstacleTreeRecursive(const std::vector<Obstacle *> &
-													 obstacles);
+		ObstacleTreeNode *buildObstacleTreeRecursive(const std::vector<Obstacle *> & obstacles);
 
 		/**
 		 * \brief      Computes the agent neighbors of the specified agent.

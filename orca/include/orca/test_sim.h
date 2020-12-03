@@ -17,7 +17,7 @@
 #include <cstdlib>
 #include <vector>
 #include <fstream>
-#include <opencv2/opencv.hpp>
+// #include <opencv2/opencv.hpp>
 
 #if RVO_OUTPUT_TIME_AND_POSITIONS
 #include <iostream>
@@ -54,10 +54,11 @@
 class Test_Sim{
 	private:
 	/* Saving into LOG Files*/
-	std::ofstream logg;
+	std::ofstream log;
 
 	
-	ros::NodeHandle nh_;	 	 /*Class Node handle*/
+	// -------------- ROS VARIABLES --------------------
+	ros::NodeHandle nh_;	 				    /*Class Node handle*/
 	
 	ros::Publisher velocity_pb_;		 		/*Class Member publisher for Velocity*/
 	
@@ -74,90 +75,120 @@ class Test_Sim{
     double T_robot_world[3][3];
 
     tf::TransformListener listener1_; 		// for base_footprint->map
-    tf::StampedTransform transform1_; 		// for base_footprint->map
+    
+	tf::StampedTransform transform1_; 		// for base_footprint->map
 
 	tf::TransformListener listener2_; 		// for base_scan->map
-    tf::StampedTransform transform2_; 		// for base_scan->map
-
-    tf::Vector3 transformVelocity_(tf::Matrix3x3& mat, tf::Vector3& velInWorld);
+    
+	tf::StampedTransform transform2_; 		// for base_scan->map
 	
 	// ------------------------------------
-	/* RVO Simulator Attributes & Methods*/
 
-	//* Defining the variables for ORCA - START
+	//* Defining the variables for ORCA 
 	double robotRadius_{22.0f};
-	double safetyBuffer_{5.0f};
+	
+	double safetyBuffer_{188.0f};
+	
 	double netRobotRadius_{robotRadius_ + safetyBuffer_};
+	
 	float maxSpeed_{};
+	
 	RVO::Vector2 velocity;
 
+	
 	double timeHorizonAgent_{5.0f};
-	double timeHorizonObstacle_{300.0f};
+	
+	double timeHorizonObstacle_{1200.00f};
 
-	float neighborDist_{};
-	size_t maxNeighbors_{};
-	//* Defining the variables for ORCA - END
-
-
-
-	//* ORCA Env Setup - START
-
-	// Creating a simulator instance 
-	RVO::RVOSimulator *sim;
-
-	// Setting up the scenario
-	void setupScenario_();
-
-	void setupAgent_();
-	void setupObstacle_();
-
-	// Method Update visualization (Increment Time Step dT)
-	void updateVisualization_();
-
-	// Setting up v_pref
-	void setPreferredVelocities_();
-
-	// Setup up robot
+	
 	std::string robotName_ {"turtlebot3_waffle"};
+	
 	RVO::Vector2 robotStart_{RVO::Vector2(-500.00f, 0.00f)};
-	RVO::Vector2 robotGoal_{RVO::Vector2(600.00f, 300.00f)};
-
-	// Vector to keep track of goals of each agent
-	std::vector<RVO::Vector2> goals_;
+	
+	RVO::Vector2 robotGoal_{RVO::Vector2(600.00f, 0.00f)};
 
 	// Obstacle Data
+	
 	std::string obsName_ {"unit_cylinder"};
+	
 	double centerX_{0.00f}; 
+	
 	double centerY_{0.00f};
+	
 	int angularDivisions_{360};
+	
 	double radiusObstacle_{120.0f}; // in cm
 
-	//* ORCA Env Setup - END
+	float neighborDist_{};
+	
+	size_t maxNeighbors_{};
 
+
+
+	// ------------------------------------
+	//* ORCA Env Setup  
+
+	
+	RVO::RVOSimulator *sim;				// Creating a simulator instance 
+
+	std::vector<RVO::Vector2> goals_;	// Vector to keep track of goals of each agent
+	
+	void setupScenario_();				// Setting up the scenario
+
+	void setupAgent_();					// Setting up agents 
+	
+	void setupObstacle_();			 	// Setting up obstacle points
+
+	void updateVisualization_();		// Method Update visualization (Increment Time Step dT)
+	
+	void setPreferredVelocities_();		// Setting up v_pref
+
+	bool runORCA_(); 					// Execute the ORCA Loop
+	
+	bool reachedGoal_();				// Check if agent reached goal
+	
+	
+	// ------------------------------------
 
 	//* Helper member functions and variables
 	bool b_obstacleInitialized_{false};
+
+	ros::Time startTimeSimulation_;
 	
-	bool reachedGoal_();
+	ros::Time endTimeSimulation_;
 
 	RVO::Vector2 robotCurrentPosition_{robotStart_};		
-	std::vector<RVO::Vector2> obstData_;
-
-    geometry_msgs::Twist toRobotFrame_(geometry_msgs::Twist&);  // Vel  [map -> base_footprint]
 	
-	void velocityPublisher_(const geometry_msgs::Twist& ); 		// alters velocity to ensure drift proof motion
+	std::vector<RVO::Vector2> obstData_;
+	
+	std::vector<RVO::Vector2> obstDataFinal_;
+	
+	void velocityPublisher_(const geometry_msgs::Twist& ); 							// Alters velocity to ensure drift proof motion & finally publishes it
 
-	void dispTransformationMat_(tf::Matrix3x3& mat);			// print transfomation matrix
+    tf::Vector3 transformVelocity_(tf::Matrix3x3& mat, tf::Vector3& vel);			// Tranforms vel wrt the transformation mat
 
+    geometry_msgs::Twist transformVelToRobotFrame_(geometry_msgs::Twist&);  		// Vel transformation [map -> base_footprint]
+
+	void dispTransformationMat_(tf::Matrix3x3& mat);								// Prints transfomation matrix
+
+	void printObstacleVector_ (std::vector<RVO::Vector2>& );							// Prints obstacle vector
+
+	double norm2_(RVO::Vector2& currPoint, RVO::Vector2& prevPoint);     			// Computes distance between two scan points squared
+
+		
 	public:
+
+
 	Test_Sim();
-	Test_Sim(ros::NodeHandle & nh);	
+
+	Test_Sim(ros::NodeHandle & nh);
+
 	~Test_Sim();
 
-	RVO::Vector2 getRobotCurrentPosition();						// returns current robot position as RVO::Vector2
-	RVO::Vector2 transformPointToMapFrame(tf::Matrix3x3& , const tf::Vector3& , const tf::Vector3& );
+	RVO::Vector2 getRobotCurrentPosition();					// returns current robot position as RVO::Vector2
 	
-	//friend class Agent;
+	RVO::Vector2 transformPointToWorldFrame(tf::Matrix3x3& , const tf::Vector3& , const tf::Vector3& );
+	
 };
 
 

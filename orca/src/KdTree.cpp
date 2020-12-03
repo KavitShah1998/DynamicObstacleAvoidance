@@ -121,8 +121,8 @@ namespace RVO {
 		}
 
 		obstacleTree_ = buildObstacleTreeRecursive(obstacles);
-		//std::cout << "Printing KdTree From kdTree.cpp: \n";
-		//printKdTreeRecursive(obstacleTree_);
+		// std::cout << "Printing KdTree From kdTree.cpp: \n";
+		// printKdTreeRecursive(obstacleTree_);
 	}
 
 

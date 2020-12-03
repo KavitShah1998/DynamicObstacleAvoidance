@@ -12,5 +12,9 @@
 ./orca/src/understanding_modelStates.cpp
 
 
+# turtlebot3 packages
+turtlebot3/
+turtlebot3_simulations/
+
 
 
