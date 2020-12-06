@@ -162,8 +162,8 @@ void Test_Sim::setupObstacle_(){
 	
 	auto setupObstacleEndTime = ros::Time::now();
 
-	std::cout << "Time to execute setupObstacle : " << (setupObstacleEndTime-setupObstacleStartTime).toSec() <<"\n";
-	log << "Time to execute setupObstacle : " << (setupObstacleEndTime-setupObstacleStartTime).toSec() <<"\n";
+	// std::cout << "Time to execute setupObstacle : " << (setupObstacleEndTime-setupObstacleStartTime).toSec() <<"\n";
+	// log << "Time to execute setupObstacle : " << (setupObstacleEndTime-setupObstacleStartTime).toSec() <<"\n";
 }
 
 
@@ -413,15 +413,18 @@ void Test_Sim::modelStatesCallbackFunction_(const gazebo_msgs::ModelStates::Cons
 
 	// create an AgentState object to store robot_state
 	orca_msgs::AgentState robotState;
+	orca_msgs::DetectedEntity robotStateEntity;
 
 	robotState.header.stamp = ros::Time::now();
-	robotState.agent_ID = 0;
-	robotState.data.pos.x = robotCurrentPosition_.x();
-	robotState.data.pos.y = robotCurrentPosition_.y();
-	robotState.data.vel.x = robotVelocity.x();
-	robotState.data.vel.y = robotVelocity.y();
-	robotState.data.radius = netRobotRadius_;
+	robotState.agent_ID.push_back(0);
+	robotStateEntity.pos.x = robotCurrentPosition_.x();
+	robotStateEntity.pos.y = robotCurrentPosition_.y();
+	robotStateEntity.vel.x = robotVelocity.x();
+	robotStateEntity.vel.y = robotVelocity.y();
+	robotStateEntity.radius = netRobotRadius_;
 
+	// pushing the robot current state data object into the Robot State msg
+	robotState.data.push_back(robotStateEntity);
 
 	// publish the robotState data
 	my_robot_state_pb_.publish(robotState);

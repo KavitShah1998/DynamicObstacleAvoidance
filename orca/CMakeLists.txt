@@ -6,7 +6,7 @@ project(orca)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
-SET(OpenCV_DIR /home/kshah/installation/OpenCV-master/installation/OpenCV-master/lib/cmake/opencv4)
+#SET(OpenCV_DIR /home/kshah/installation/OpenCV-master/installation/OpenCV-master/lib/cmake/opencv4)
 
 
 
@@ -234,23 +234,24 @@ set(RVO_SOURCES
 add_executable(map_to_odom_publisher src/main_pub_map_odom.cpp)
 target_link_libraries(map_to_odom_publisher ${catkin_LIBRARIES})
 
-add_executable(SO1 src/simple_obstacle1.cpp ${RVO_HEADERS} ${RVO_SOURCES})
-target_link_libraries(SO1 ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-set_target_properties(SO1 PROPERTIES LINKER_LANGUAGE C)
+#add_executable(SO1 src/simple_obstacle1.cpp ${RVO_HEADERS} ${RVO_SOURCES})
+#target_link_libraries(SO1 ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+#set_target_properties(SO1 PROPERTIES LINKER_LANGUAGE C)
 
 
 add_executable(test_sim src/test_sim.cpp include/orca/test_sim.h ${RVO_HEADERS} ${RVO_SOURCES})
 target_link_libraries(test_sim ${catkin_LIBRARIES})
 set_target_properties(test_sim PROPERTIES LINKER_LANGUAGE C)
+add_dependencies(test_sim ${ORCA_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 #add_executable(modelState src/understanding_modelStates.cpp)
 #target_link_libraries(modelState ${catkin_LIBRARIES})
 
-add_executable(tfPCL src/tryTfPCL.cpp)
-target_link_libraries(tfPCL ${catkin_LIBRARIES})
+#add_executable(tfPCL src/tryTfPCL.cpp)
+#target_link_libraries(tfPCL ${catkin_LIBRARIES})
 
-add_executable(temp src/temp.cpp)
-target_link_libraries(temp ${catkin_LIBRARIES})
+#add_executable(temp src/temp.cpp)
+#target_link_libraries(temp ${catkin_LIBRARIES})
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

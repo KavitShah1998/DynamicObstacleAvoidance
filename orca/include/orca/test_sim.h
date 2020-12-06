@@ -31,9 +31,6 @@
 #include <omp.h>
 #endif
 
-/* Including the RVO headers*/
-#include "orca/Definitions.h"
-#include "orca/RVO.h"
 
 
 /* Including the ros headers*/
@@ -44,6 +41,13 @@
 #include <tf/transform_listener.h>
 #include <tf/transform_datatypes.h>
 #include "orca_msgs/AgentState.h"
+#include "orca_msgs/DetectedEntity.h"
+
+
+/* Including the RVO headers*/
+#include "orca/Definitions.h"
+#include "orca/RVO.h"
+
 
 /*Set CV FLAG*/
 #define CV_FLAG true
@@ -171,7 +175,7 @@ class Test_Sim{
 
 	void dispTransformationMat_(tf::Matrix3x3& mat);								// Prints transfomation matrix
 
-	void printObstacleVector_ (std::vector<RVO::Vector2>& );							// Prints obstacle vector
+	void printObstacleVector_ (std::vector<RVO::Vector2>& );						// Prints obstacle vector
 
 	double norm2_(RVO::Vector2& currPoint, RVO::Vector2& prevPoint);     			// Computes distance between two scan points squared
 

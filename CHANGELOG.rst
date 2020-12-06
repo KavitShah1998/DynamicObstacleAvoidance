@@ -23,3 +23,21 @@ Change logs for DynamicObstacleAvoidance Repository
 	* Added test_sim_Functional_Information.txt which explains the API for test_sim.cpp
 	* Added CHANGELOG.rst
 * Added a new folder for animations
+
+
+1.3(2020-12-06) [Kavit]
+-------------------
+* In package orca_msgs:
+	* Converted "data" & "agent_ID" objects as arrays
+* In package orca:
+	* Updated CMakeLists.txt : 
+		- Removed OPENCV_DIR tag
+		- Only build executables map_to_odom_publisher & test_sim
+		- Added add_dependency tag to test_sim executable
+		- Raised the order of orca_msgs includes at the start of all header files using them
+		- Made necessary changes to incorporate DetectedEntity arrays in Agent{.h & .cpp} , Test_Sim{.h & .cpp} files
+* In package env:
+	* Added new launch file for open_spaces with moving humans
+* Solved Issue 1.1 which was pertaining to building the packages
+* Added ReadMe.md
+

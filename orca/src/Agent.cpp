@@ -424,8 +424,8 @@ namespace RVO {
 	}*/
 	
 
-	void Agent::agentStateCallBackFunction(const orca_msgs::AgentState::ConstPtr& ptr){
-		position_ = RVO::Vector2(ptr-> data.pos.x, ptr->data.pos.y);
+	void Agent::agentStateCallBackFunction(const orca_msgs::AgentStateConstPtr& ptr){
+		position_ = RVO::Vector2(ptr-> data[0].pos.x, ptr->data[0].pos.y);
 	}
 
 	bool linearProgram1(const std::vector<Line> &lines, size_t lineNo, float radius, const Vector2 &optVelocity, bool directionOpt, Vector2 &result)

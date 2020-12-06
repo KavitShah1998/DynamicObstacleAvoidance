@@ -38,11 +38,11 @@
  * \brief      Contains the Vector2 class.
  */
 
+#include "orca_msgs/Vector2.h"
 
 #include <ros/ros.h>
 #include <cmath>
 #include <ostream>
-#include <orca_msgs/Vector2.h>
 //#include "orca_msgs/Vector2.h"
 
 

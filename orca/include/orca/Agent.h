@@ -38,10 +38,12 @@
  * \brief      Contains the Agent class.
  */
 
+#include "orca_msgs/AgentState.h"
+
 #include "Definitions.h"
 #include "RVOSimulator.h"
 #include <ros/ros.h>
-#include <orca_msgs/AgentState.h>
+
 
 //class Test_Sim;
 
@@ -94,7 +96,7 @@ namespace RVO {
 		 * \brief      Agent call back function to get current agent position
 		 *             
 		 */
-		void agentStateCallBackFunction(const orca_msgs::AgentState::ConstPtr& ptr);
+		void agentStateCallBackFunction(const orca_msgs::AgentStateConstPtr& ptr);
 
 		/**
 		 * \brief      Takes in the object of Test_Sim so that Agents could use 

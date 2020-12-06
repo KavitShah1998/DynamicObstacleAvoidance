@@ -22,3 +22,12 @@ Changelog for package orca
 * Added test_sim_Functional_Information.txt which explains the API for test_sim.cpp
 * Added CHANGELOG.rst
 
+
+1.3 (2020-12-03)
+-------------------
+* Updated CMakeLists.txt of orca package : 
+	- Removed OPENCV_DIR tag
+	- Only build executables map_to_odom_publisher & test_sim
+	- Added add_dependency tag to test_sim executable
+	- Raised the order of orca_msgs includes at the start of all header files using them
+	- Made necessary changes to incorporate DetectedEntity arrays in Agent{.h & .cpp} , Test_Sim{.h & .cpp} files

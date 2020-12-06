@@ -5,5 +5,5 @@
 
 
 Header header
-int64 agent_ID
-DetectedEntity data
+int64[] agent_ID
+DetectedEntity[] data
