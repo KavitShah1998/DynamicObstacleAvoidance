@@ -63,7 +63,16 @@ Once you have successfully build the project you can run the executables with th
 * To run the simulation, in another sourced terminal:
 
         rosrun orca test_sim
+	
+3. Run Obstacle detector package:
+* First run split_scan package, then obstacle tracker:
 
+```
+ 	roslaunch split_scan split_scan.launch 
+```
+```
+	roslaunch obstacle_detector detector.launch
+```
 
 ## For Contributors: 
 	
@@ -74,6 +83,10 @@ Once you have successfully build the project you can run the executables with th
 * While making any new changes, please update the CHANGELOG.rst files in the base folder and in each package about the changes made. Creating a new branch for the change would be highly adviced.
 
 * For any issues/bugs, please create a new issue in the issues section with appropriate description and tags to help other contributors narrow down & solve the problem effectively.
+
+
+* If you are facing issues of obstacle tracker please open the issue here, else:
+* https://github.com/nagarjunvinukonda/Gazebo-Human-and-obstacle-tracker/issues
 
 * Your contributions are truly appreciated
 
@@ -88,6 +101,10 @@ Once you have successfully build the project you can run the executables with th
 
 * https://github.com/ROBOTIS-GIT/turtlebot3_simulations/tree/melodic-devel
 
+* https://github.com/tysik/obstacle_detector
+
 * Installing [OpenCV4](https://www.learnopencv.com/install-opencv-4-on-ubuntu-18-04/) for Ubuntu 18.04
+
+* M.Przybyła, “Detection and tracking of 2d geometric obstacles from lrfdata,” in2017 11th International Workshop on Robot Motion and Control(RoMoCo). IEEE, 2017, pp. 135–141
 
 
