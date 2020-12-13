@@ -21,14 +21,14 @@ Simulation with hyper-parameter time-horizon-obstacle = 1800 units
 </p>
 
 For Obstacle detection package we have used following set of parameters for robust human detection and our environment obstacles detection:
-<p float="center">
+
 ![params_final](https://user-images.githubusercontent.com/49041896/102007696-3fcf3700-3cf9-11eb-98cd-343db53bdcca.png)
-</p>
+
 
 The following is the result:
-<p float="center">
+
 ![ezgif com-gif-maker (5)](https://user-images.githubusercontent.com/49041896/102007586-75bfeb80-3cf8-11eb-8c87-80c70906ea4a.gif)
-</p>
+
 
 
 ## Dependencies
