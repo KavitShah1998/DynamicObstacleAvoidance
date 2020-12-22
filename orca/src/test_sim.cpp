@@ -18,9 +18,9 @@
  */ 
 Test_Sim::Test_Sim(ros::NodeHandle& nh) : nh_(nh){
 	
-	startTimeSimulation_ = ros::Time::now();
+	
 
-	log = std::ofstream("/home/ros_ws/orca_ws/src/orca/logs/data_gazebo.txt", std::ofstream::out | std::ofstream::trunc);
+	log = std::ofstream("/home/kshah/ros_ws/orca_ws/src/orca/logs/data_gazebo.txt", std::ofstream::out | std::ofstream::trunc);
 	log << "Test_Sim Constructor \n";
 
 	// static obstacle subscriber
@@ -28,7 +28,7 @@ Test_Sim::Test_Sim(ros::NodeHandle& nh) : nh_(nh){
 	
 
 	sim = new RVO::RVOSimulator();
-
+	
 
 	// wait till obstacle info from surrounding is obtained
 	while(!b_obstacleInitialized_){
@@ -39,20 +39,22 @@ Test_Sim::Test_Sim(ros::NodeHandle& nh) : nh_(nh){
 
 
 	// publish velocity
-	velocity_pb_ = nh_.advertise <geometry_msgs :: Twist> ( "cmd_vel" , 1);
+	velocity_pb_ = nh_.advertise <geometry_msgs :: Twist> ( "cmd_vel" , 10);
 
 
 	// obtain model state for the robot (pose)info from gazebo 
 	model_state_sh_ = nh_.subscribe("/gazebo/model_states", 1, &Test_Sim::modelStatesCallbackFunction_, this);
 
+	// obtain agent state information published (ideally by human detection node)
+	agent_state_sh_ = nh_.subscribe("/agents",1, &Test_Sim::agentStateCallbackFunction_, this);
 
 	// publishes robot (pose) info needed by Agent.cpp
-	my_robot_state_pb_ = nh_.advertise<orca_msgs::AgentState>("/my_robot/modelStates",10);
+	my_robot_state_pb_ = nh_.advertise<orca_msgs::AgentState>("/my_robot/modelStates",1);
 
 	
 	setupScenario_();
 	
-
+	startTimeSimulation_ = ros::Time::now();
 	runORCA_();	
 }
 
@@ -81,7 +83,10 @@ Test_Sim::~Test_Sim(){
 
 	endTimeSimulation_ = ros::Time::now();
 
-	std::cout << "Total Time to completion = " << (endTimeSimulation_ - startTimeSimulation_).toSec() << " seconds \n";
+	std::cout << "Start time = " << startTimeSimulation_.toSec() << "\n";
+	std::cout << "End time = " << endTimeSimulation_.toSec() << "\n";
+	std::cout << "minScan_ = " << minScan_ << "\n";
+	std::cout << "Total Time to completion = " << endTimeSimulation_.toSec() - startTimeSimulation_.toSec() << " seconds \n";
 	std::cout << "XXXXXXX END OF ORCA XXXXXXXXXX "  << "\n";
 
 }
@@ -106,7 +111,7 @@ void Test_Sim::setupScenario_()
 #endif
 
 	/* Specify the global time step of the simulation. */
-	sim->setTimeStep(0.002f);
+	sim->setTimeStep(0.12f);
 
 	/* Setup agent attributes*/
 	setupAgent_();
@@ -223,7 +228,7 @@ void Test_Sim::setPreferredVelocities_()
 
 		// converted it into a unit vector of norm2 more than 1
 		if (RVO::absSq(goalVector) > 1.0f) 
-			goalVector = RVO::normalize(goalVector);
+			goalVector = RVO::normalize(goalVector) * vPrefScalingFactor_;
 		 
 
 
@@ -239,6 +244,7 @@ void Test_Sim::setPreferredVelocities_()
 
 		// add the change in agent velocity to current velocity 
 		RVO::Vector2 agent_updated_pref_velocity = sim->getAgentPrefVelocity(i) + agent_change_in_vel;
+		std::cout << " Set Agent Preferred Velocity : " << agent_updated_pref_velocity << "\n";
 		sim->setAgentPrefVelocity(i, agent_updated_pref_velocity);
 	}
 }
@@ -259,10 +265,15 @@ void Test_Sim::setPreferredVelocities_()
  */
 bool Test_Sim::runORCA_(){
 
+	ros::Time currTime;
+	ros::Time prevTime;
+	
 	// ORCA main loop
 	do {
 
+		currTime = ros::Time::now();
 
+		std::cout << "Delta T : " << (currTime.toSec() - prevTime.toSec()) << "\n";
 		// setup obstacles at every step
 		setupObstacle_();
 
@@ -274,10 +285,10 @@ bool Test_Sim::runORCA_(){
 		// transform from /map frame to /base_footprint
 		try{ 
 
-			listener1_.waitForTransform("/base_footprint", "/map", 
+			listener1_.waitForTransform("/base_footprint", "/odom", 
 			ros::Time(0), ros::Duration(10.0));
 			
-			listener1_.lookupTransform("/base_footprint", "/map",
+			listener1_.lookupTransform("/base_footprint", "/odom",
 			ros::Time(0), transform1_);
 
 		}
@@ -313,7 +324,7 @@ bool Test_Sim::runORCA_(){
 
 		ros::spinOnce();
 
-
+		prevTime = currTime;
 	}while (!reachedGoal_() && ros::ok());
 }
 
@@ -334,7 +345,6 @@ bool Test_Sim::runORCA_(){
  */
 bool Test_Sim::reachedGoal_()
 {
-
 	/* Check if all agents have reached their goals. */
 	for (size_t i = 0; i < sim->getNumAgents(); ++i) {
 		
@@ -508,8 +518,9 @@ void Test_Sim::staticObstaclesCallBackFunction_(const sensor_msgs::LaserScanCons
 		if(!isinf(scans->ranges[i])) {
 
 			double rayAngle = i * d_angle;
+			double laserRange = scans->ranges[i];
 
-
+			minScan_ = std::min(minScan_ , laserRange);
 			// laser point in x,y in /base_scan frame
 			double x = (scans->ranges[i]) * cos(rayAngle);
 			double y = (scans->ranges[i]) * sin(rayAngle);
@@ -555,6 +566,23 @@ void Test_Sim::staticObstaclesCallBackFunction_(const sensor_msgs::LaserScanCons
 
 }
 
+
+
+
+
+
+/*
+ * agentStateCallbackFunction_()
+ * Input : const ptr to orca_msgs::AgentState
+ * Output : void
+ * 
+ * brief : clears agent vector and fills it up with 
+ * 		   new agent info (which in turn is published
+ * 		   by human detector node)
+ */
+void Test_Sim::agentStateCallbackFunction_(const orca_msgs::AgentState::ConstPtr& agentStates){
+	
+}
 
 
 

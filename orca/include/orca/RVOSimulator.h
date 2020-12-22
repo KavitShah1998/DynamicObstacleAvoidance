@@ -146,7 +146,7 @@ namespace RVO {
 		size_t addAgent(const Vector2 &position);
 
 		/**
-		 * \brief      Adds a new agent to the simulation.
+		 * \brief      Adds a new agent to the simulation. // NOT SO USEFUL
 		 * \param      position        The two-dimensional starting position of
 		 *                             this agent.
 		 * \param      neighborDist    The maximum distance (center point to
@@ -190,6 +190,18 @@ namespace RVO {
 						size_t maxNeighbors, float timeHorizon,
 						float timeHorizonObst, float radius, float maxSpeed,
 						const Vector2 &velocity = Vector2());
+
+		/**
+		 * \brief      Adds a new agent to the simulation. //USEFUL
+		 * \param      position        The two-dimensional starting position of
+		 *                             this agent.
+		 * \param      radius          The radius of this agent.
+		 *                             Must be non-negative.
+		 * \param      velocity        The initial two-dimensional linear velocity
+		 *                             of this agent (optional).
+		 * \return     The number of the agent.
+		 */
+		size_t addAgent(const Vector2 &position, float radius, const Vector2 &velocity);
 
 		/**
 		 * \brief      Adds a new obstacle to the simulation.
@@ -591,6 +603,13 @@ namespace RVO {
 		 *                             
 		 */
 		void clearObstacleVector();
+
+		/**
+		 * \brief      Clears the agent vector (except the robot agent)
+		 * 			   for new vector to be build efficiently
+		 *                             
+		 */
+		void clearAgentVector();
 
 		
 	private:

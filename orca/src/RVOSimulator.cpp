@@ -127,6 +127,26 @@ namespace RVO {
 		return agents_.size() - 1;
 	}
 
+	size_t RVOSimulator::addAgent(const Vector2 &position, float radius, const Vector2 &velocity)
+	{
+		Agent *agent = new Agent(this);
+
+		agent->position_ = position;
+		agent->maxNeighbors_ = defaultAgent_->maxNeighbors_;
+		agent->maxSpeed_ = defaultAgent_->maxSpeed_;
+		agent->neighborDist_ = defaultAgent_->neighborDist_;
+		agent->radius_ = radius;
+		agent->timeHorizon_ = defaultAgent_->timeHorizon_;
+		agent->timeHorizonObst_ = defaultAgent_->timeHorizonObst_;
+		agent->velocity_ = velocity;
+
+		agent->id_ = agents_.size();		// local agent id_ ... aka agent_index in vector
+
+		agents_.push_back(agent);
+
+		return agents_.size() - 1;
+	}
+
 	size_t RVOSimulator::addObstacle(const std::vector<Vector2> &vertices)
 	{
 		if (vertices.size() < 2) {
@@ -396,5 +416,25 @@ namespace RVO {
 		obstacles_.clear();
 
 	}
+
+	void RVOSimulator::clearAgentVector(){
+		// std::cout << "Size of Obstacle Vector : " << obstacles_.size() << "\n";
+		std::cout << "No. Of agents : " << agents_.size() << "\n";
+		Agent* robot = agents_[0];			// store the robot agent
+
+		// clear the remaining agents
+		for (size_t i = 1; i < agents_.size(); ++i) {
+			if(!agents_[i]){
+				delete agents_[i];
+				agents_[i] = nullptr;
+			}
+		}
+
+		agents_.clear(); 					// clear the agents_ vector which wipes out every agent data
+
+		agents_.emplace_back(robot); 		// this ensures the robot agent is always there
+
+	}
 	
 }
+	

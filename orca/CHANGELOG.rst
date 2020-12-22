@@ -31,3 +31,12 @@ Changelog for package orca
 	- Added add_dependency tag to test_sim executable
 	- Raised the order of orca_msgs includes at the start of all header files using them
 	- Made necessary changes to incorporate DetectedEntity arrays in Agent{.h & .cpp} , Test_Sim{.h & .cpp} files
+
+
+1.4 (2020-12-21)
+-------------------
+* Updated the following files (status : running for static obstacles)
+	- Agent.cpp
+	- KdTree.cpp
+	- TestSim.cpp
+	- RVOSimulator.cpp

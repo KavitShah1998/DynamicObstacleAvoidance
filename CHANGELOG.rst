@@ -41,3 +41,8 @@ Change logs for DynamicObstacleAvoidance Repository
 * Solved Issue 1.1 which was pertaining to building the packages
 * Added ReadMe.md
 
+
+1.4(2020-12-21) [Kavit]
+-------------------
+* Updated orca (check changelogs ORCA)
+* Updated env  (check changelogs env)
