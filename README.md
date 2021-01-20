@@ -13,12 +13,12 @@ The algorithm has been made to deploy on mobile robots with static indoor enviro
 
 Algorithm simulation inside hopital corridors
 <p float="center">
-<img src="animations/hospital_orca_static2.0.gif" width="49%"/>
+<img src="animations/hospital_orca_static2.0.gif" width="80%"/>
 </p>
 
 Algorithm simulation in hospital lobby
 <p float="center">
-<img src="animations/lobby_orca_static2.0.gif" width="49%"/>
+<img src="animations/lobby_orca_static2.0.gif" width="80%"/>
 </p>
 
 
