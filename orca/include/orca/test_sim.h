@@ -95,7 +95,8 @@ class Test_Sim{
 	//* Defining the variables for ORCA 
 	double robotRadius_{22.0f};
 	
-	double safetyBuffer_{188.0f};
+	// double safetyBuffer_{188.0f};
+	double safetyBuffer_{50.0f};
 	
 	double netRobotRadius_{robotRadius_ + safetyBuffer_};
 	
@@ -103,18 +104,19 @@ class Test_Sim{
 	
 	RVO::Vector2 velocity;
 
+	double timeStep_{0.12f};
 	
 	double timeHorizonAgent_{5.0f};
 	
 	double timeHorizonObstacle_{800.00f};
 
-	double vPrefScalingFactor_{2.0};
+	double vPrefScalingFactor_{5.0};
 	
 	std::string robotName_ {"turtlebot3_waffle"};
 	
 	RVO::Vector2 robotStart_{RVO::Vector2(-600, 0.00f)};
-	
-	RVO::Vector2 robotGoal_{RVO::Vector2(600.00f, 00.00f)};
+	 
+	RVO::Vector2 robotGoal_{RVO::Vector2(500.0f,0.00f)};
 	// RVO::Vector2 robotGoal_{RVO::Vector2(-150.00f, 000.00f)};
 
 	// Obstacle Data
@@ -199,6 +201,158 @@ class Test_Sim{
 	
 	RVO::Vector2 transformPointToWorldFrame(tf::Matrix3x3& , const tf::Vector3& , const tf::Vector3& );
 	
+
+	std::vector<RVO::Vector2> left_wall {
+		RVO::Vector2(710,610), 
+		RVO::Vector2(-620,610)
+	};
+
+	std::vector<RVO::Vector2> bottom_wall {
+		RVO::Vector2(-620,610),
+		RVO::Vector2(-620,-580)
+	};
+
+	std::vector<RVO::Vector2> right_wall{
+		RVO::Vector2(-620,-580), 
+		RVO::Vector2(710,-580)
+
+	};
+
+	std::vector<RVO::Vector2> top_wall{
+		RVO::Vector2(710,-580),
+		RVO::Vector2(710,610)
+	};
+
+	std::vector<RVO::Vector2> box_top{
+		RVO::Vector2(510,-340),
+		RVO::Vector2(410,-340),
+		RVO::Vector2(410,-440),
+		RVO::Vector2(510,-440)
+	};
+
+	std::vector<RVO::Vector2> box_center{
+		RVO::Vector2(70,-330),
+		RVO::Vector2(-30,-330),
+		RVO::Vector2(-30,-430),
+		RVO::Vector2(70,-430)
+	};
+
+	std::vector<RVO::Vector2> box_bottom{
+		RVO::Vector2(-315,-345),
+		RVO::Vector2(-415,-345),
+		RVO::Vector2(-415,-445),
+		RVO::Vector2(-315,-445)
+	};
+
+	std::vector<RVO::Vector2> center_circle;
+
+
+	// hospital objects
+	
+	std::vector<RVO::Vector2> room1_left{  // door not included
+		RVO::Vector2(-300,-1100),
+		RVO::Vector2(-300,-300),
+		RVO::Vector2(-900,-300),
+		RVO::Vector2(-900,-900),
+		RVO::Vector2(-700,-900),
+		RVO::Vector2(-600,-1000),
+		RVO::Vector2(-600,-1100),
+	};
+
+	std::vector<RVO::Vector2> room2_left{  // door not included
+		RVO::Vector2(-300,0.0),
+		RVO::Vector2(-300,600),
+		RVO::Vector2(-500,600),
+		RVO::Vector2(-600,700),
+		RVO::Vector2(-600,800),
+		RVO::Vector2(-900,800),
+		RVO::Vector2(-900,0.0),
+	};
+
+	std::vector<RVO::Vector2> room1_right{
+		RVO::Vector2(0.0,-1100),
+		RVO::Vector2(600,-1100),
+		RVO::Vector2(600,-550),
+		RVO::Vector2(0.0,-550)
+	};
+
+	std::vector<RVO::Vector2> room2_right{
+		RVO::Vector2(0.0,-550),
+		RVO::Vector2(600,-550),
+		RVO::Vector2(600,0.0),
+		RVO::Vector2(0.0,0.0)
+	};
+
+	std::vector<RVO::Vector2> room3_right{
+		RVO::Vector2(0.0, 00),
+		RVO::Vector2(600,0.0),
+		RVO::Vector2(600,800),
+		RVO::Vector2(0.0,800)
+	};
+
+	
+	
+		// objects
+	std::vector<RVO::Vector2> tram{
+		RVO::Vector2(-600,-100),
+		RVO::Vector2(-400,-100),
+		RVO::Vector2(-400,0.0),
+		RVO::Vector2(-600,0.0)
+	};
+
+	std::vector<RVO::Vector2> tram2{
+		RVO::Vector2(0.0,200),
+		RVO::Vector2(0.0,340),
+		RVO::Vector2(-50,340),
+		RVO::Vector2(-50,200)
+	};
+
+	std::vector<RVO::Vector2> seat1{
+		RVO::Vector2(-300,-1000),
+		RVO::Vector2(-200,-1000),
+		RVO::Vector2(-200,-800),
+		RVO::Vector2(-300,-800)
+	};
+
+	std::vector<RVO::Vector2> seat2{
+		RVO::Vector2(-100,-500),
+		RVO::Vector2(-100,-700),
+		RVO::Vector2(0.0, -700),
+		RVO::Vector2(0,-500.0)
+	};
+
+	std::vector<RVO::Vector2> seat3{
+		RVO::Vector2(-300,50),
+		RVO::Vector2(-200,50),
+		RVO::Vector2(-200,210),
+		RVO::Vector2(-300,210)
+	};
+
+	std::vector<RVO::Vector2> seat4{
+		RVO::Vector2(-100,400),
+		RVO::Vector2(-0.0,400),
+		RVO::Vector2(-0.0,580),
+		RVO::Vector2(-100,580)
+	};
+
+	std::vector<RVO::Vector2> circularBric;
+
+	// std::vector<RVO::Vector2> d{
+	// 	RVO::Vector2(-0.351529,-3.88318), 
+	// 	RVO::Vector2(-0.325635,-4.29018)
+	// };
+
+	// std::vector<RVO::Vector2> d2{
+	// 	RVO::Vector2(-0.325188,-3.34342), 
+	// 	RVO::Vector2(-0.325762,-3.39504)
+	// };
+
+	// std::vector<RVO::Vector2> e2{
+	// 	RVO::Vector2(4.07345,-3.70187), 
+	// 	RVO::Vector2(4.06114,-3.80345)
+	// };
+
+
 };
 
 

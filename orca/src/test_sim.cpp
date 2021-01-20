@@ -19,7 +19,7 @@
 Test_Sim::Test_Sim(ros::NodeHandle& nh) : nh_(nh){
 	
 	
-
+	std::cout << "Test_Sim\n";
 	log = std::ofstream("/home/kshah/ros_ws/orca_ws/src/orca/logs/data_gazebo.txt", std::ofstream::out | std::ofstream::trunc);
 	log << "Test_Sim Constructor \n";
 
@@ -106,12 +106,14 @@ Test_Sim::~Test_Sim(){
 void Test_Sim::setupScenario_()
 {
 
+	// std::cout << "setupScenario_\n";
+
 #if RVO_SEED_RANDOM_NUMBER_GENERATOR
 	std::srand(static_cast<unsigned int>(std::time(NULL)));
 #endif
 
 	/* Specify the global time step of the simulation. */
-	sim->setTimeStep(0.12f);
+	sim->setTimeStep(timeStep_);
 
 	/* Setup agent attributes*/
 	setupAgent_();
@@ -134,8 +136,10 @@ void Test_Sim::setupScenario_()
  */
 void Test_Sim::setupAgent_(){
 
+	// std::cout << "setupAgent_\n";
+
 	/* Specify the default parameters for agents that are subsequently added. */
-	sim->setAgentDefaults(15.0f, 10, timeHorizonAgent_, timeHorizonObstacle_, netRobotRadius_, 22.0f);
+	sim->setAgentDefaults(15.0f, 10, timeHorizonAgent_, timeHorizonObstacle_, netRobotRadius_, timeStep_ * vPrefScalingFactor_ * 100.0f);
 
 
 	// Adding Robot as an agent
@@ -159,8 +163,51 @@ void Test_Sim::setupAgent_(){
  */
 void Test_Sim::setupObstacle_(){
 
+	// std::cout << "setupObstacle_\n";
+
 	auto setupObstacleStartTime = ros::Time::now();
 	
+
+	// open spaces
+
+	sim->addObstacle(left_wall);
+	sim->addObstacle(bottom_wall);
+	sim->addObstacle(right_wall);
+	sim->addObstacle(top_wall);
+
+	sim->addObstacle(box_top);
+	sim->addObstacle(box_center);
+	sim->addObstacle(box_bottom);
+
+	for (int i=0; i<360; i++){
+		center_circle.push_back(RVO::Vector2(-100 * sin(i*M_PI/180.0f), 100 * cos(i*M_PI/180.f) ));
+	}
+	sim->addObstacle(center_circle);
+
+
+	// hospital
+
+	// sim->addObstacle(room1_left);
+	// sim->addObstacle(room2_left);
+
+	// sim->addObstacle(room1_right);
+	// sim->addObstacle(room2_right);
+	// sim->addObstacle(room3_right);
+
+	// sim->addObstacle(seat1);
+	// sim->addObstacle(seat2);
+	// sim->addObstacle(seat3);
+	// sim->addObstacle(seat4);
+
+	// sim->addObstacle(tram);
+	// sim->addObstacle(tram2);
+	
+
+	// for (int i=0; i<360; i++){
+	// 	circularBric.push_back(RVO::Vector2(-300 -50 * sin(i*M_PI/180.0f),-250 + 50 * cos(i*M_PI/180.f) ));
+	// }
+	// sim->addObstacle(circularBric);
+
 	/* Process the obstacles so that they are accounted for in the simulation. */
 	sim->processObstacles();
 
@@ -180,6 +227,7 @@ void Test_Sim::setupObstacle_(){
 #if RVO_OUTPUT_TIME_AND_POSITIONS
 void Test_Sim::updateVisualization_()
 {
+	// std::cout << "updateVisualization_\n";
 	// std::cout << "updateVisualization \n";
 	log << "updateVisualization \n";
 
@@ -214,7 +262,8 @@ void Test_Sim::updateVisualization_()
  */
 void Test_Sim::setPreferredVelocities_()
 {
-
+	// std::cout << "setPreferredVelocities_\n";
+	
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
@@ -231,21 +280,25 @@ void Test_Sim::setPreferredVelocities_()
 			goalVector = RVO::normalize(goalVector) * vPrefScalingFactor_;
 		 
 
-
 		sim->setAgentPrefVelocity(i, goalVector);
-		
+		std::cout << "Prfer velocity: "<<goalVector << "\n";
 
+		
+		
+		
 		//Perturb a little to avoid deadlocks due to perfect symmetry.
 		float angle = std::rand() * 2.0f * M_PI / RAND_MAX;
-		float dist = std::rand() * 0.0001f / RAND_MAX;
+		// float dist = std::rand() * 0.0001f / RAND_MAX;
+		float dist = std::rand() * 0.0001 / RAND_MAX;
 	
 		RVO::Vector2 agent_change_in_vel = dist * RVO::Vector2 ( std::cos (angle) , std::sin (angle) );
 		
 
 		// add the change in agent velocity to current velocity 
 		RVO::Vector2 agent_updated_pref_velocity = sim->getAgentPrefVelocity(i) + agent_change_in_vel;
-		std::cout << " Set Agent Preferred Velocity : " << agent_updated_pref_velocity << "\n";
+		std::cout << " change in Velocity : " << agent_change_in_vel << "\n";
 		sim->setAgentPrefVelocity(i, agent_updated_pref_velocity);
+		std::cout << "After Manipulating Vel : " <<agent_updated_pref_velocity << "\n";
 	}
 }
 
@@ -267,15 +320,16 @@ bool Test_Sim::runORCA_(){
 
 	ros::Time currTime;
 	ros::Time prevTime;
-	
+	std::cout << "Run ORCA\n";
+	setupObstacle_();
 	// ORCA main loop
 	do {
 
 		currTime = ros::Time::now();
 
-		std::cout << "Delta T : " << (currTime.toSec() - prevTime.toSec()) << "\n";
+		// std::cout << "Delta T : " << (currTime.toSec() - prevTime.toSec()) << "\n";
 		// setup obstacles at every step
-		setupObstacle_();
+		// setupObstacle_();
 
 
 		// update pref velocities of agents
@@ -397,6 +451,7 @@ RVO::Vector2 Test_Sim::getRobotCurrentPosition(){
  */
 void Test_Sim::modelStatesCallbackFunction_(const gazebo_msgs::ModelStates::ConstPtr& modelStatePtr){
 
+	std::cout << "modelStatesCallbackFunction_\n";
 	int obstacleIndex{0}, robotIndex{0};
 
 	for (int i = 0; i < (modelStatePtr -> name).size(); i++){
@@ -449,12 +504,10 @@ void Test_Sim::modelStatesCallbackFunction_(const gazebo_msgs::ModelStates::Cons
 
 
 
-/*
- * staticObstaclesCallBackFunction_()
- * Input : const ptr to sensor_msgs::LaserScan
- * Output : void
- * 
- * brief : converts laser scan points from robot 
+/*Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+
+xacro: in-order processing became default in ROS verts laser scan points from robot 
  * 		   base frame into odom (World) frame as
  * 		   required by the ORCA algorithm
  */
@@ -462,11 +515,11 @@ void Test_Sim::staticObstaclesCallBackFunction_(const sensor_msgs::LaserScanCons
 
 	size_t sizeOfLaserScanArray = scans->ranges.size();
 	
-
+	std::cout << "staticObstaclesCallBackFunction_\n";
 	// clear obstacle vector (Local as well as from ORCA) 
 	// every time on receiving new scan
 	obstData_.clear();
-	sim->clearObstacleVector();
+	// sim->clearObstacleVector();  // IMP
 
 
 	// angle increment between two scans in radians
@@ -506,64 +559,118 @@ void Test_Sim::staticObstaclesCallBackFunction_(const sensor_msgs::LaserScanCons
 	// Allowable error is the 'ratio' distance between two 
 	// points divided by the first point's distance from 
 	// robot's position in the World
-	double allowError{(0.2f/4.0f) + 0.1f}; 
+	// double allowError{(0.2f/4.0f) + 0.1f};
+	double allowError{0.5f}; 
 
+	bool b_startingNewCluster{true};
 
+	// std::cout << " ===============================\n";
 	// create clusters of neighbouring obstacle points
 	// and pass it to ORCA
-    for(int j=0; j<sizeOfLaserScanArray; j++){
+    // for(int j=0; j<sizeOfLaserScanArray; j++){
+	// std::cout << "Printing Obstacles in Test Sim\n";
 
-		int i = (j + 180) % sizeOfLaserScanArray;
+	////////***
+	
+	// for(int j=sizeOfLaserScanArray-1; j>=0; j--){
+		
+	// 	int i = (j + 180) % sizeOfLaserScanArray;
 
-		if(!isinf(scans->ranges[i])) {
+	// 	// std::cout << i << " ";
 
-			double rayAngle = i * d_angle;
-			double laserRange = scans->ranges[i];
+	// 	if(!isinf(scans->ranges[i])) {
+	// 		// std::cout << " isNOTInf " ;
+	// 		double rayAngle = i * d_angle;
+	// 		double laserRange = scans->ranges[i];
 
-			minScan_ = std::min(minScan_ , laserRange);
-			// laser point in x,y in /base_scan frame
-			double x = (scans->ranges[i]) * cos(rayAngle);
-			double y = (scans->ranges[i]) * sin(rayAngle);
+	// 		minScan_ = std::min(minScan_ , laserRange);
+	
 
-			// current point after transforming into World frame
-			pointCurr = transformPointToWorldFrame(mat, origin, tf::Vector3(x,y,0) );
+	// 		// laser point in x,y in /base_scan frame
+	// 		double x = (scans->ranges[i]) * cos(rayAngle);
+	// 		double y = (scans->ranges[i]) * sin(rayAngle);
+
+
+	// 		// current point after transforming into World frame
+	// 		pointCurr = transformPointToWorldFrame(mat, origin, tf::Vector3(x,y,0) );
 			
-			// Cluster Logic
-			if(i!=0){
+			
+
+	// 		// Cluster Logic
+	// 		if(b_startingNewCluster){						// adding new scan to the cluster
+
+	// 			std::cout << "\n Starting new cluster\n";
+	// 			obstData_.emplace_back(pointCurr);
+	// 			b_startingNewCluster = false;
+	// 		}
+	// 		else{
 				
-				double currentError = norm2_(pointCurr, pointPrev) / scans->ranges[i];
+	// 			double currentError = norm2_(pointCurr, pointPrev);
 
-				if( currentError < allowError){ 			// Add point to current cluster
-					obstData_.emplace_back(pointCurr);
-				}
-				else{
+	// 			if( currentError < allowError){ 			// Add point to current cluster
 
-					if(obstData_.size()>1){   				// Pass cluster to ORCA 
-						sim->addObstacle(obstData_);
-						obstData_.clear();
-					}
-				}
-			}
-			else{										    // Add the first scan to cluster
-				obstData_.emplace_back(pointCurr);
-			}
+	// 				// std::cout << " Cluster Cont ";
+	// 				obstData_.emplace_back(pointCurr);
+	// 			}
+	// 			else{
+	// 				// std::cout << "Cluster Break";
+	// 				if(obstData_.size()>1){   				// Pass cluster to ORCA 
+	// 					sim->addObstacle(obstData_);	//obdtsdst.clear
+	// 				}
+	// 				obstData_.clear();
+	// 				b_startingNewCluster = true;
+	// 			}
+	// 		}
+	// 		std::cout << "RVO::Vector2" << pointCurr << ", \n";
 
-			// Update previous_Point with current_Point
-			pointPrev = pointCurr;
+	// 		// std::cout << "\n";
+	// 		// Update previous_Point with current_Point
+	// 		//sim->add
+	// 		pointPrev = pointCurr;
 
-		}
-		else {}
+	// 	}
+	// 	else {
+			
+			
+	// 		// std::cout << " is inf \n";
+	// 		if(obstData_.size()>1){   				// Pass cluster to ORCA 
+	// 			sim->addObstacle(obstData_);	
+	// 		}
+	// 		std::cout << "Detected Infinity" << obstData_.size() << "\n";
+	// 		obstData_.clear();
+	// 		b_startingNewCluster = true;
+	// 	}
 
-    }
+    // }
+
+	/////***
+
+	// std::cout << "1\n";
+	// printObstacleVector_(obstData_);
 
 	// Pass the last set of point cluster to ORCA
-	if(obstData_.size()>1){
-		sim->addObstacle(obstData_);
-		// obstData_.clear();
-	}
+	// if(obstData_.size()>1){
+	// 	sim->addObstacle(obstData_);
+	// 	// obstData_.clear();
+	// }
 
+	// obstData_ = b;
+	// // std::cout << "ObstData TEst SIm Size : " << obstData_.size() << "\n";
+	// sim->addObstacle(obstData_);
+
+	// obstData_ = c2;
+	// sim->addObstacle(obstData_);
+
+
+	// obstData_ = d2;
+	// obstData_.push_back(RVO::Vector2(00.0f, 00.0f));	
+	// obstData_.push_back(RVO::Vector2(-300.0f, 00.0f));
+	
+	// sim->addObstacle(obstData_);
+	// std::cout << "2\n";
 	b_obstacleInitialized_ = true;
-
+	// std::cout << "3\n";
+	// exit(0);
 }
 
 
@@ -597,6 +704,8 @@ void Test_Sim::agentStateCallbackFunction_(const orca_msgs::AgentState::ConstPtr
  * 		   avoid drift
  */
 void Test_Sim::velocityPublisher_(const geometry_msgs::Twist& agentVel){
+
+	std::cout << "velocityPublisher_\n";
 
 	geometry_msgs::Twist velocity;
 
@@ -645,8 +754,9 @@ void Test_Sim::velocityPublisher_(const geometry_msgs::Twist& agentVel){
  * 		   matrix
  */
 tf::Vector3 Test_Sim::transformVelocity_(tf::Matrix3x3& mat, 
-										 tf::Vector3& velInWorld){ 
+										 tf::Vector3& velInWorld){
 
+	// std::cout << "transformVelocity_\n";
 	return tf::Vector3(
 				   mat.getColumn(0).getX()*velInWorld.getX() + 
 				   mat.getColumn(1).getX()*velInWorld.getY() + 
@@ -677,6 +787,8 @@ tf::Vector3 Test_Sim::transformVelocity_(tf::Matrix3x3& mat,
  */
 geometry_msgs::Twist Test_Sim::transformVelToRobotFrame_(geometry_msgs::Twist& msg){
 	
+
+	// std::cout << "transformVelToRobotFrame_\n";
 
 	tf::Vector3 velInWorldFrame = tf::Vector3( msg.linear.x, 
 											   msg.linear.y, 
@@ -730,6 +842,7 @@ geometry_msgs::Twist Test_Sim::transformVelToRobotFrame_(geometry_msgs::Twist& m
  */
 void Test_Sim::dispTransformationMat_(tf::Matrix3x3& mat){
 	
+
 	std::cout << "Matrix = " << "\n \t" ;
 	std::cout << (mat.getColumn(0)).getX() << " \t" 
 			  << (mat.getColumn(1)).getX() << " \t"
@@ -790,6 +903,7 @@ void Test_Sim::printObstacleVector_(std::vector<RVO::Vector2>& obj){
 double Test_Sim::norm2_ (RVO::Vector2& currPoint, 
 						RVO::Vector2& prevPoint){
 
+	// std::cout << "norm2_\n";
     return pow(currPoint.x() - prevPoint.x(),2) + 
 		   pow(currPoint.y() - prevPoint.y(),2);
 }
@@ -811,6 +925,8 @@ double Test_Sim::norm2_ (RVO::Vector2& currPoint,
 RVO::Vector2 Test_Sim::transformPointToWorldFrame( tf::Matrix3x3& mat, 
 												   const tf::Vector3& origin , 
 												   const tf::Vector3& point) {
+	
+	// std::cout << "transformPointToWorldFrame\n";
 	return RVO::Vector2(
 					mat.getColumn(0).getX()*point.getX() + 
 					mat.getColumn(1).getX()*point.getY() +

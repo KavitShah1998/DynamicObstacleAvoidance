@@ -41,6 +41,7 @@
 #include <cstddef>
 #include <limits>
 #include <vector>
+#include <unordered_set>
 
 #include "Vector2.h"
 //#include "orca/gazeboSO1.h"
@@ -466,7 +467,7 @@ namespace RVO {
 		 * \param      neighborDist    The default maximum distance (center point
 		 *                             to center point) to other agents a new agent
 		 *                             takes into account in the navigation. The
-		 *                             larger this number, the longer he running
+		 *                             larger this number, the longer the running
 		 *                             time of the simulation. If the number is too
 		 *                             low, the simulation will not be safe.
 		 *                             Must be non-negative.

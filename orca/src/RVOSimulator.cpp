@@ -405,12 +405,25 @@ namespace RVO {
 	}
 
 	void RVOSimulator::clearObstacleVector(){
-		// std::cout << "Size of Obstacle Vector : " << obstacles_.size() << "\n";
+		
+		std::unordered_set<Obstacle*> obstSet;
+		// std::cout << "/Printing Obstacles from RVOSim : " << obstacles_.size() << "\n";
 		for (size_t i = 0; i < obstacles_.size(); ++i) {
-			if(!obstacles_[i]){
+			
+			if(obstacles_[i] != NULL){
+
+				obstSet.insert(obstacles_[i]);
+				// std::cout << i <<"*"<< obstacles_[i]->point_ << " -> " << obstacles_[i]->nextObstacle_->point_ << "\n";
+
+				if( obstSet.find(obstacles_[i]->nextObstacle_) != obstSet.end()){
+					obstSet.clear();
+					// std::cout << " ***End of a Cluster***\n\n";
+				}
+
 				delete obstacles_[i];
 				obstacles_[i] = nullptr;
 			}
+
 		}
 
 		obstacles_.clear();
@@ -419,7 +432,7 @@ namespace RVO {
 
 	void RVOSimulator::clearAgentVector(){
 		// std::cout << "Size of Obstacle Vector : " << obstacles_.size() << "\n";
-		std::cout << "No. Of agents : " << agents_.size() << "\n";
+		// std::cout << "No. Of agents : " << agents_.size() << "\n";
 		Agent* robot = agents_[0];			// store the robot agent
 
 		// clear the remaining agents

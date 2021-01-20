@@ -46,3 +46,10 @@ Change logs for DynamicObstacleAvoidance Repository
 -------------------
 * Updated orca (check changelogs ORCA)
 * Updated env  (check changelogs env)
+
+
+1.4(2020-12-21) [Kavit]
+-------------------
+* Updated orca 
+	- Stopped using laser scans for static nav
+	- Added Obstacle data manually for testing new method

@@ -3,20 +3,20 @@
  
   <!-- Robot pose -->
   <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
-  <arg name="x" default="-5.2"/>
-  <arg name="y" default="-0.5"/>
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="-5.0"/>
   <arg name="z" default="0.0"/>
   <arg name="roll" default="0"/>
   <arg name="pitch" default="0"/>
-  <arg name="yaw" default="00"/>
+  <arg name="yaw" default="1.570"/>
   <arg name="move_forward_only" default="false"/>
-  <arg name="map_file" default="$(find env)/maps/turtlebot3_open_spaces-edit.yaml"/>
+  <!--arg name="map_file" default="$(find env)/maps/turtlebot3_open_spaces-edit.yaml"/-->
   <arg name="open_rviz" default="true"/>
   <!-- Launch other relevant files-->
   <!--include file="$(find my_robot)/launch/robot_description.launch"/-->
 
   <!-- World File -->
-  <arg name="world_file" default="$(find env)/worlds/turtlebot3_open_spaces-edit.world"/>
+  <arg name="world_file" default="$(find env)/worlds/museum.world"/>
   <!--arg name="world_file" default="$(find env)/worlds/turtlebot3_open_spaces22.world"/-->
 
   <!-- Launch Gazebo World -->
@@ -32,14 +32,14 @@
 
 
   <!-- Launch the Human-->
-  <include file="$(find person)/launch/spawn_standing_person.launch">
+  <!--include file="$(find person)/launch/spawn_standing_person.launch">
     <arg name="x" default="3.0" />
     <arg name="y" default="3.0" />
     <arg name="z" default="0.0" />
     <arg name="yaw" default="-1.570" />
 
     <arg name="robot_name" default="standing_human_01" />
-  </include>
+  </include-->
 
   <!-- Spawn My Robot -->
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
@@ -49,20 +49,5 @@
               -param robot_description"/>
 
 
-  <node name="map_to_odom" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 map odom"/>
-
-
-  <!-- AMCL , move_base , rviz  LAUNCHED BY THE "turtlebot3_env_navigation.launch" file below -->
-
-
-  <include file="$(find env)/launch/turtlebot3_env_navigation.launch">
-    <arg name="model" value="$(arg model)"/>
-    <arg name="map_file" value="$(find env)/maps/turtlebot3_open_spaces-edit.yaml"/>
-    <arg name="open_rviz" value="true"/>
-    <arg name="move_forward_only" value="false"/>
-    <arg name="initial_pose_x" value="$(arg x)"/>
-    <arg name="initial_pose_y" value="$(arg y)"/>
-    <arg name="initial_pose_a" value="$(arg yaw)"/>
-  </include>
 
 </launch>

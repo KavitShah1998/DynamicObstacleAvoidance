@@ -1,0 +1,76 @@
+Determining if the C compiler works failed with the following output:
+Change Dir: /home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_6c62f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_6c62f.dir/build.make CMakeFiles/cmTC_6c62f.dir/build
+make[1]: Entering directory '/home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_6c62f.dir/testCCompiler.c.o
+/usr/bin/avr-gcc-5.4.0    -o CMakeFiles/cmTC_6c62f.dir/testCCompiler.c.o   -c /home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_6c62f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6c62f.dir/link.txt --verbose=1
+/usr/bin/avr-gcc-5.4.0      -rdynamic CMakeFiles/cmTC_6c62f.dir/testCCompiler.c.o  -o cmTC_6c62f 
+avr-gcc-5.4.0: error: unrecognized command line option ‘-rdynamic’
+CMakeFiles/cmTC_6c62f.dir/build.make:97: recipe for target 'cmTC_6c62f' failed
+make[1]: *** [cmTC_6c62f] Error 1
+make[1]: Leaving directory '/home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_6c62f/fast' failed
+make: *** [cmTC_6c62f/fast] Error 2
+
+
+Determining if the C compiler works failed with the following output:
+Change Dir: /home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_5292d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_5292d.dir/build.make CMakeFiles/cmTC_5292d.dir/build
+make[1]: Entering directory '/home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_5292d.dir/testCCompiler.c.o
+/usr/bin/avr-gcc-5.4.0    -o CMakeFiles/cmTC_5292d.dir/testCCompiler.c.o   -c /home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_5292d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5292d.dir/link.txt --verbose=1
+/usr/bin/avr-gcc-5.4.0      -rdynamic CMakeFiles/cmTC_5292d.dir/testCCompiler.c.o  -o cmTC_5292d 
+avr-gcc-5.4.0: error: unrecognized command line option ‘-rdynamic’
+CMakeFiles/cmTC_5292d.dir/build.make:97: recipe for target 'cmTC_5292d' failed
+make[1]: *** [cmTC_5292d] Error 1
+make[1]: Leaving directory '/home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_5292d/fast' failed
+make: *** [cmTC_5292d/fast] Error 2
+
+
+Determining if the C compiler works failed with the following output:
+Change Dir: /home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_ee543/fast"
+/usr/bin/make -f CMakeFiles/cmTC_ee543.dir/build.make CMakeFiles/cmTC_ee543.dir/build
+make[1]: Entering directory '/home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_ee543.dir/testCCompiler.c.o
+/usr/bin/avr-gcc-5.4.0    -o CMakeFiles/cmTC_ee543.dir/testCCompiler.c.o   -c /home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_ee543
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ee543.dir/link.txt --verbose=1
+/usr/bin/avr-gcc-5.4.0      -rdynamic CMakeFiles/cmTC_ee543.dir/testCCompiler.c.o  -o cmTC_ee543 
+avr-gcc-5.4.0: error: unrecognized command line option ‘-rdynamic’
+CMakeFiles/cmTC_ee543.dir/build.make:97: recipe for target 'cmTC_ee543' failed
+make[1]: *** [cmTC_ee543] Error 1
+make[1]: Leaving directory '/home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_ee543/fast' failed
+make: *** [cmTC_ee543/fast] Error 2
+
+
+Determining if the C compiler works failed with the following output:
+Change Dir: /home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_65474/fast"
+/usr/bin/make -f CMakeFiles/cmTC_65474.dir/build.make CMakeFiles/cmTC_65474.dir/build
+make[1]: Entering directory '/home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_65474.dir/testCCompiler.c.o
+/usr/bin/avr-gcc-5.4.0    -o CMakeFiles/cmTC_65474.dir/testCCompiler.c.o   -c /home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_65474
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_65474.dir/link.txt --verbose=1
+/usr/bin/avr-gcc-5.4.0      -rdynamic CMakeFiles/cmTC_65474.dir/testCCompiler.c.o  -o cmTC_65474 
+avr-gcc-5.4.0: error: unrecognized command line option ‘-rdynamic’
+CMakeFiles/cmTC_65474.dir/build.make:97: recipe for target 'cmTC_65474' failed
+make[1]: *** [cmTC_65474] Error 1
+make[1]: Leaving directory '/home/kshah/ros_ws/orca_ws/src/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_65474/fast' failed
+make: *** [cmTC_65474/fast] Error 2
+
+

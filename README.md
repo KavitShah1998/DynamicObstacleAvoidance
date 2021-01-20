@@ -1,6 +1,7 @@
 # Dynamic Obstacle Avoidance in Indoor Environment using ORCA in ROS
 
-The repository is our project for achieving dynamic collision avoidance in indoor spaces using Optimal Reciprocal Collision Avoidance algorithm in ROS using C++
+The repository is our project for achieving dynamic collision avoidance in indoor spaces using Optimal Reciprocal Collision Avoidance (ORCA) algorithm in ROS using C++
+
 
 The repository employs use of RVO2 library for ORCA & dynamic object tracking with LiDAR using Kalman filters
 
@@ -10,14 +11,14 @@ The package is build and tested for Ubuntu 18.04 with ROS Melodic
 
 The algorithm has been made to deploy on mobile robots with static indoor environments
 
-Simulation with hyper-parameter time-horizon-obstacle = 1200 units 
+Algorithm simulation inside hopital corridors
 <p float="center">
-<img src="animations/turtlebot3_ORCA_demo_Static_thObst1200_2020-12-02.gif" width="49%"/>
+<img src="animations/hospital_orca_static2.0.gif" width="49%"/>
 </p>
 
-Simulation with hyper-parameter time-horizon-obstacle = 1800 units 
+Algorithm simulation in hospital lobby
 <p float="center">
-<img src="animations/turtlebot3_ORCA_demo_Static_thObst1800_2020-12-02.gif" width="49%"/>
+<img src="animations/lobby_orca_static2.0.gif" width="49%"/>
 </p>
 
 
