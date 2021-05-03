@@ -53,3 +53,9 @@ Change logs for DynamicObstacleAvoidance Repository
 * Updated orca 
 	- Stopped using laser scans for static nav
 	- Added Obstacle data manually for testing new method
+
+1.5(2021-05-03) [Kavit]
+-------------------
+* Resolved build issue 
+	- Created a new folder "additional_packages" 
+	- Added person package to additional_packages/
